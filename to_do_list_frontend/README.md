@@ -1,38 +1,71 @@
-# sv
+# Personal To‑Do List Frontend (SvelteKit)
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Modern, minimalist to‑do list UI with Ocean Professional theme (blue & amber accents). Users can create, update, complete, and delete tasks and filter between All / Active / Completed.
 
-## Creating a project
+## Getting started
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Install dependencies and run the dev server:
 
 ```bash
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+Open http://localhost:3000
 
-To create a production version of your app:
+## Configuration
 
-```bash
-npm run build
+Set backend API base URL via Vite env:
+
+Create `.env` (see `.env.example`):
+
+```
+VITE_API_BASE=/api
 ```
 
-You can preview the production build with `npm run preview`.
+If your backend runs on another host:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```
+VITE_API_BASE=https://api.example.com
+```
+
+## Expected Backend API
+
+The UI integrates with these endpoints:
+
+- GET `${VITE_API_BASE}/tasks` → Task[]
+- POST `${VITE_API_BASE}/tasks` body: { title: string } → Task
+- PATCH `${VITE_API_BASE}/tasks/:id` body: { title?: string; completed?: boolean } → Task
+- DELETE `${VITE_API_BASE}/tasks/:id` → { success: true }
+
+Task type:
+
+```ts
+type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+```
+
+Responses must be JSON. Non‑2xx responses should include a message or text for error feedback.
+
+## Design
+
+- Ocean Professional theme
+- Clean UI, subtle shadows, rounded corners
+- Smooth transitions, gentle gradients
+- Accessible controls (checkboxes, buttons with labels)
+- Optimistic UI updates with error toasts
+
+## Scripts
+
+- `npm run dev` – start dev server
+- `npm run build` – build for production
+- `npm run preview` – preview production build
+- `npm run check` – type/check SvelteKit
+- `npm run lint` – lint
+- `npm run test` – unit tests (if added)
+

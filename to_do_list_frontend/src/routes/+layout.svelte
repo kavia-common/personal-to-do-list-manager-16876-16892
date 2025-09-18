@@ -1,17 +1,17 @@
 <script lang="ts">
-    import '../app.css';
-    let { children } = $props();
+  import '../app.css';
+  let { children } = $props();
 </script>
 
 <main>
+  <section class="container">
     {@render children()}
+  </section>
 </main>
 
 <style>
-    main {
-        display: flex;
-        min-height: 100vh;
-        align-items: center;
-        justify-content: center;
-    }
+  main {
+    min-height: 100vh;
+    display: block;
+  }
 </style>
