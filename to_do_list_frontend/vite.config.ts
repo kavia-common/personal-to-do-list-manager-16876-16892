@@ -8,9 +8,11 @@ import { defineConfig, loadEnv } from "vite";
  * - Dev server proxy for API calls: map /api -> VITE_DEV_PROXY_TARGET if provided
  *   This avoids CORS and missing /api in dev environments.
  */
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const proxyTarget = env.VITE_DEV_PROXY_TARGET; // e.g. http://localhost:4000
+
+  const isDev = command === "serve" || mode === "development";
 
   return {
     plugins: [sveltekit()],
@@ -27,18 +29,19 @@ export default defineConfig(({ mode }) => {
         usePolling: true,
       },
       // Proxy API calls in dev to the backend if target is configured
-      proxy: proxyTarget
-        ? {
-            "/api": {
-              target: proxyTarget,
-              changeOrigin: true,
-              secure: false,
-              // keep /api prefix when forwarding (backend expected to serve under /api)
-              // If backend doesn't use /api prefix, uncomment the rewrite below:
-              // rewrite: (path) => path.replace(/^\/api/, ""),
-            },
-          }
-        : undefined,
+      proxy:
+        isDev && proxyTarget
+          ? {
+              "/api": {
+                target: proxyTarget,
+                changeOrigin: true,
+                secure: false,
+                // keep /api prefix when forwarding (backend expected to serve under /api)
+                // If backend doesn't use /api prefix, uncomment the rewrite below:
+                // rewrite: (path) => path.replace(/^\/api/, ""),
+              },
+            }
+          : undefined,
     },
     test: {
       workspace: [
